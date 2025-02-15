@@ -1,14 +1,10 @@
-#include <iostream>
-#include "PetShop.cpp"
-
-using namespace std;
+#include "PetShop.cpp" // Mengimpor file PetShop.cpp yang berisi implementasi kelas PetShop
 
 int main() {
-    PetShop myPetShop;    // Membuat objek PetShop untuk mengelola produk
-    int choice;           // Variabel untuk menyimpan pilihan menu pengguna
-    int id;              // Variabel untuk menyimpan ID produk
-    string name, category, photo;    // Variabel untuk menyimpan data produk
-    double price;        // Variabel untuk menyimpan harga produk
+    PetShop myPetShop; // Membuat objek PetShop untuk mengelola data produk
+    int choice, id; // Variabel untuk menyimpan pilihan menu dan ID produk
+    string name, category, photo; // Variabel untuk menyimpan nama, kategori, dan foto produk
+    double price; // Variabel untuk menyimpan harga produk
 
     do {
         // Menampilkan menu utama
@@ -20,85 +16,58 @@ int main() {
         cout << "5. Cari Produk Berdasarkan Nama\n";
         cout << "6. Keluar\n";
         cout << "Pilih menu (1-6): ";
-        cin >> choice;
+        cin >> choice; // Menerima input pilihan dari pengguna
 
         switch (choice) {
             case 1:
-                // Menampilkan semua produk yang tersedia
-                cout << "\n=== DAFTAR PRODUK ===\n";
-                myPetShop.displayProducts();
+                myPetShop.displayProducts(); // Memanggil fungsi untuk menampilkan daftar produk
                 break;
-
             case 2:
-                // Menambahkan produk baru
-                cout << "\n=== TAMBAH PRODUK BARU ===\n";
+                cout << "Masukkan Nama: ";
+                cin.ignore(); // Mengabaikan karakter newline dari input sebelumnya
+                getline(cin, name); // Menerima input nama produk
+                cout << "Masukkan Kategori: ";
+                getline(cin, category); // Menerima input kategori produk
+                cout << "Masukkan Harga: ";
+                cin >> price; // Menerima input harga produk
+                cout << "Masukkan Foto: ";
+                cin.ignore(); // Mengabaikan karakter newline dari input sebelumnya
+                getline(cin, photo); // Menerima input URL atau path foto produk
+                myPetShop.addProduct(name, category, price, photo); // Menambahkan produk baru ke sistem
+                break;
+            case 3:
+                cout << "Masukkan ID Produk: ";
+                cin >> id; // Menerima input ID produk yang akan diperbarui
+                cout << "Masukkan Nama: ";
+                cin.ignore();
+                getline(cin, name); // Menerima input nama baru produk
+                cout << "Masukkan Kategori: ";
+                getline(cin, category); // Menerima input kategori baru produk
+                cout << "Masukkan Harga: ";
+                cin >> price; // Menerima input harga baru produk
+                cout << "Masukkan Foto: ";
+                cin.ignore();
+                getline(cin, photo); // Menerima input foto baru produk
+                myPetShop.updateProduct(id, name, category, price, photo); // Memperbarui data produk berdasarkan ID
+                break;
+            case 4:
+                cout << "Masukkan ID Produk: ";
+                cin >> id; // Menerima input ID produk yang akan dihapus
+                myPetShop.deleteProduct(id); // Menghapus produk berdasarkan ID
+                break;
+            case 5:
                 cout << "Masukkan Nama Produk: ";
                 cin.ignore();
-                getline(cin, name);
-
-                cout << "Masukkan Kategori Produk: ";
-                getline(cin, category);
-
-                cout << "Masukkan Harga Produk: ";
-                cin >> price;
-
-                cout << "Masukkan Nama File Foto Produk: ";
-                cin.ignore();
-                getline(cin, photo);
-
-                myPetShop.addProduct(name, category, price, photo);
+                getline(cin, name); // Menerima input nama produk yang akan dicari
+                myPetShop.searchProductByName(name); // Mencari produk berdasarkan nama
                 break;
-
-            case 3:
-                // Memperbarui produk berdasarkan ID
-                cout << "\n=== PERBARUI PRODUK ===\n";
-                cout << "Masukkan ID Produk yang akan diperbarui: ";
-                cin >> id;
-
-                cout << "Masukkan Nama Produk Baru: ";
-                cin.ignore();
-                getline(cin, name);
-
-                cout << "Masukkan Kategori Produk Baru: ";
-                getline(cin, category);
-
-                cout << "Masukkan Harga Produk Baru (Rp): ";
-                cin >> price;
-
-                cout << "Masukkan Nama File Foto Produk Baru: ";
-                cin.ignore();
-                getline(cin, photo);
-
-                myPetShop.updateProduct(id, name, category, price, photo);
-                break;
-
-            case 4:
-                // Menghapus produk berdasarkan ID
-                cout << "\n=== HAPUS PRODUK ===\n";
-                cout << "Masukkan ID Produk yang akan dihapus: ";
-                cin >> id;
-                myPetShop.deleteProduct(id);
-                break;
-
-            case 5:
-                // Mencari produk berdasarkan nama
-                cout << "\n=== CARI PRODUK ===\n";
-                cout << "Masukkan Nama Produk yang akan dicari: ";
-                cin.ignore();
-                getline(cin, name);
-                myPetShop.searchProductByName(name);
-                break;
-
             case 6:
-                // Keluar dari program
-                cout << "\nTerima kasih telah menggunakan sistem manajemen PetShop!\n";
+                cout << "Terima kasih!\n"; // Menampilkan pesan keluar
                 break;
-
             default:
-                // Menangani input yang tidak valid
-                cout << "\nError: Pilihan menu tidak valid! Silakan pilih 1-6.\n";
+                cout << "Pilihan tidak valid!\n"; // Menampilkan pesan jika input tidak valid
         }
-    } while (choice != 6);
+    } while (choice != 6); // Mengulang menu sampai pengguna memilih opsi keluar (6)
 
-    return 0;
+    return 0; // Mengembalikan 0 untuk menunjukkan program selesai dengan sukses
 }
