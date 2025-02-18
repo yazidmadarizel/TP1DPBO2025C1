@@ -5,23 +5,7 @@
 untuk keberkahanNya maka saya tidak melakukan kecurangan seperti yang telah dispesifikasikan. Aamiin.*/
 
 ## **Desain Program**  
-Program terdiri dari satu class utama, yaitu `PetShop`, yang bertanggung jawab atas manajemen data produk di pet shop.  
-
-**Class: `PetShop`**  
-- **Atribut:**  
-  - `_product_ids` (List[int]): Menyimpan ID unik setiap produk.  
-  - `_product_names` (List[str]): Menyimpan nama produk.  
-  - `_product_categories` (List[str]): Menyimpan kategori produk.  
-  - `_product_prices` (List[float]): Menyimpan harga produk.  
-  - `_product_photos` (List[str]): Menyimpan URL atau path foto produk.  
-  - `_next_id` (int): Menyimpan ID berikutnya yang akan digunakan.  
-
-- **Method:**  
-  - `add_product(name, category, price, photo)`: Menambahkan produk baru ke sistem.  
-  - `update_product(id, name, category, price, photo)`: Memperbarui data produk berdasarkan ID.  
-  - `delete_product(id)`: Menghapus produk berdasarkan ID.  
-  - `display_products()`: Menampilkan semua produk dalam bentuk tabel.  
-  - `search_product_by_name(name)`: Mencari produk berdasarkan nama.  
+Program terdiri dari satu class utama, yaitu PetShop, yang bertanggung jawab atas manajemen data produk di pet shop. PetShop memiliki atribut untuk menyimpan ID unik produk, nama, kategori, harga, serta foto produk, dengan _next_id sebagai penanda ID berikutnya. Metode dalam class ini mencakup add_product() untuk menambahkan produk baru, update_product() untuk memperbarui data produk berdasarkan ID, delete_product() untuk menghapus produk, display_products() untuk menampilkan daftar produk dalam bentuk tabel, serta search_product_by_name() untuk mencari produk berdasarkan nama.  
 
 ---
 
