@@ -4,17 +4,12 @@
  soal TP 1 dalam mata kuliah Desain dan Pemrograman Berorientasi Objek
 untuk keberkahanNya maka saya tidak melakukan kecurangan seperti yang telah dispesifikasikan. Aamiin.*/
 
-## **Desain Program C++, Java, & Python**  
+## **Desain Program**  
 Program terdiri dari satu class utama, yaitu PetShop, yang bertanggung jawab atas manajemen data produk di pet shop. PetShop memiliki atribut untuk menyimpan ID unik produk, nama, kategori, harga, serta foto produk, dengan _next_id sebagai penanda ID berikutnya. Metode dalam class ini mencakup add_product() untuk menambahkan produk baru, update_product() untuk memperbarui data produk berdasarkan ID, delete_product() untuk menghapus produk, display_products() untuk menampilkan daftar produk dalam bentuk tabel, serta search_product_by_name() untuk mencari produk berdasarkan nama.  
 
 ---
 
-## **Desain Program PHP**  
-Program ini dirancang untuk mengelola data produk dalam sebuah pet shop menggunakan PHP dengan sesi (session) untuk menyimpan informasi produk secara sementara. Program terdiri dari satu kelas utama, yaitu PetShop, yang bertanggung jawab atas penambahan, pembaruan, penghapusan, pencarian, serta penampilan daftar produk. Setiap produk memiliki atribut seperti ID unik, nama, kategori, harga, dan foto produk. Program ini menggunakan metode addProduct() untuk menambahkan produk baru dengan ID yang dihasilkan secara otomatis, updateProduct() untuk memperbarui informasi produk berdasarkan ID yang diberikan, deleteProduct() untuk menghapus produk dari daftar, serta searchProductByName() untuk mencari produk berdasarkan nama. Data produk disimpan dalam variabel sesi agar tetap tersedia selama pengguna masih mengakses aplikasi. Antarmuka pengguna berbasis HTML dan PHP memungkinkan pengguna untuk menampilkan daftar produk dalam bentuk tabel, menambah produk baru dengan validasi harga agar tidak negatif, memperbarui informasi produk yang sudah ada, menghapus produk berdasarkan ID, serta mencari produk dengan pencocokan sebagian nama. Foto produk yang diunggah disimpan dalam direktori khusus, dan aplikasi menangani unggahan file dengan memeriksa apakah foto tersedia sebelum menyimpannya. Program juga menyediakan sistem navigasi sederhana dengan tombol dan formulir yang memungkinkan pengguna berinteraksi dengan sistem secara mudah.
-
----
-
-## **Alur Program C++, Java, & Python**  
+## **Alur Program**  
 1. **Menampilkan menu utama**  
    - User disajikan dengan menu pilihan untuk mengelola produk dalam pet shop.  
 
@@ -44,47 +39,4 @@ Program ini dirancang untuk mengelola data produk dalam sebuah pet shop mengguna
 
 7. **Keluar dari program (Pilihan 6)**  
    - Program akan berhenti setelah menampilkan pesan "Terima kasih!".   
-
----
-
-## **Alur Program dalam PHP**
-
-1. **Inisialisasi Session dan Objek PetShop**  
-   - Program memulai sesi PHP (`session_start()`) untuk menyimpan data produk.  
-   - Kelas `PetShop` dibuat untuk mengelola produk.  
-
-2. **Menampilkan Menu Utama**  
-   - Halaman utama menampilkan daftar produk dalam bentuk tabel.  
-   - Terdapat opsi untuk menambah, mengubah, menghapus, dan mencari produk.  
-
-3. **Menampilkan Daftar Produk (Default View)**  
-   - Mengambil data dari sesi (`$_SESSION['products']`).  
-   - Jika tidak ada produk, tampilkan pesan "Tidak ada produk yang tersedia".  
-   - Jika ada, tampilkan daftar produk dalam tabel dengan kolom ID, Nama, Kategori, Harga, dan Foto.  
-
-4. **Menambahkan Produk Baru**  
-   - User mengisi formulir dengan `nama`, `kategori`, `harga`, dan mengunggah `foto`.  
-   - Jika harga negatif, tampilkan pesan error.  
-   - File foto disimpan dalam folder `uploads/`.  
-   - Data produk disimpan dalam `$_SESSION['products']`.  
-
-5. **Memperbarui Produk**  
-   - User memasukkan ID produk yang ingin diperbarui.  
-   - Jika ID ditemukan, user dapat mengubah nama, kategori, harga, dan foto.  
-   - Jika tidak ada foto baru, gunakan foto lama.  
-   - Jika ID tidak valid, tampilkan pesan error.  
-
-6. **Menghapus Produk**  
-   - User memasukkan ID produk yang ingin dihapus.  
-   - Produk dihapus dari `$_SESSION['products']`.  
-   - Jika ID tidak ditemukan, tampilkan pesan error.  
-
-7. **Mencari Produk Berdasarkan Nama**  
-   - User memasukkan nama produk untuk pencarian.  
-   - Program melakukan pencarian menggunakan `stripos()` untuk menemukan produk dengan nama yang mirip.  
-   - Jika ditemukan, hanya produk yang sesuai yang ditampilkan.  
-   - Jika tidak ada hasil, tampilkan pesan error.  
-
-8. **Keluar dari Program**  
-   - User dapat menutup browser atau menghapus sesi (`session_destroy()`) untuk mereset data produk.  
 
