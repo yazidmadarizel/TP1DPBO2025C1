@@ -1,173 +1,115 @@
 <?php
-session_start(); // Start a session to persist data across requests
+// Memulai session untuk menyimpan data produk
+session_start(); 
 
+// Mendefinisikan kelas PetShop
 class PetShop {
-    private $products = []; // Array to hold product data
-    private $file = 'products.json'; // File to store product data in JSON format
+    // Properti untuk menyimpan daftar produk
+    private $products = []; 
 
-    // Getter for products
+    // Konstruktor untuk inisialisasi kelas
+    public function __construct() {
+        // Memeriksa apakah session 'products' sudah ada, jika tidak, inisialisasi sebagai array kosong
+        if (!isset($_SESSION['products'])) {
+            $_SESSION['products'] = [];
+        }
+        // Menggunakan referensi ke session 'products' untuk menyimpan data produk
+        $this->products = &$_SESSION['products'];
+    }
+
+    // Method untuk mendapatkan daftar produk
     public function getProducts() {
         return $this->products;
     }
 
-    // Setter for products
-    public function setProducts($products) {
-        $this->products = $products;
-        $this->saveProducts(); // Save the updated products list to the file
-    }
-
-    // Getter for file
-    public function getFile() {
-        return $this->file;
-    }
-
-    // Setter for file
-    public function setFile($file) {
-        $this->file = $file;
-    }
-
-    public function __construct() {
-        // Check if the products file exists, and load the products data from it
-        if (file_exists($this->getFile())) {
-            $this->setProducts(json_decode(file_get_contents($this->getFile()), true)); // Decode JSON data into an associative array
-        }
-    }
-
-    private function saveProducts() {
-        // Save the products array back to the JSON file with pretty print formatting
-        file_put_contents($this->getFile(), json_encode($this->getProducts(), JSON_PRETTY_PRINT));
-    }
-
-    public function displayProducts() {
-        // Return the products array to be displayed
-        return $this->getProducts();
-    }
-
+    // Method untuk menambahkan produk baru
     public function addProduct($name, $category, $price, $photo) {
-        $products = $this->getProducts(); // Get current products
-        $maxId = 0; // Initialize variable to store the highest product ID
-        // Loop through all products to find the highest ID
-        foreach ($products as $product) {
-            if ($product['id'] > $maxId) {
-                $maxId = $product['id']; // Update maxId if a higher ID is found
-            }
-        }
-        $id = $maxId + 1; // Set the new product ID to be one greater than the max ID
-        // Add the new product to the products array
-        $products[] = [
+        // Menentukan ID baru dengan menambahkan 1 ke ID tertinggi yang ada
+        $maxId = empty($this->products) ? 0 : max(array_column($this->products, 'id'));
+        $id = $maxId + 1; 
+
+        // Menambahkan produk baru ke dalam array products
+        $this->products[] = [
             'id' => $id,
             'name' => $name,
             'category' => $category,
             'price' => $price,
             'photo' => $photo
         ];
-        $this->setProducts($products); // Save the updated products list
     }
 
+    // Method untuk memperbarui produk yang sudah ada
     public function updateProduct($id, $name, $category, $price, $photo) {
-        $products = $this->getProducts(); // Get current products
-        // Loop through the products and find the one with the matching ID
-        foreach ($products as &$product) {
+        // Melakukan iterasi melalui array products untuk mencari produk dengan ID yang sesuai
+        foreach ($this->products as &$product) {
             if ($product['id'] == $id) {
-                // Update the product details
+                // Memperbarui data produk
                 $product['name'] = $name;
                 $product['category'] = $category;
                 $product['price'] = $price;
                 $product['photo'] = $photo;
-                $this->setProducts($products); // Save the updated products list
-                return true; // Return true if the product was successfully updated
+                return true; // Mengembalikan true jika produk berhasil diperbarui
             }
         }
-        return false; // Return false if no product with the given ID was found
+        return false; // Mengembalikan false jika produk tidak ditemukan
     }
 
+    // Method untuk menghapus produk berdasarkan ID
     public function deleteProduct($id) {
-        $products = $this->getProducts(); // Get current products
-        // Filter out the product with the given ID from the products array
-        $products = array_filter($products, function ($product) use ($id) {
-            return $product['id'] != $id; // Keep products whose ID doesn't match the one to delete
-        });
-        $this->setProducts($products); // Save the updated products list
+        // Menghapus produk dengan ID tertentu dan mengindeks ulang array
+        $this->products = array_values(array_filter($this->products, fn($product) => $product['id'] != $id));
     }
 
+    // Method untuk mencari produk berdasarkan nama
     public function searchProductByName($name) {
-        $products = $this->getProducts(); // Get current products
-        // Filter products by name using case-insensitive search
-        return array_filter($products, function ($product) use ($name) {
-            return stripos($product['name'], $name) !== false; // Return products whose name contains the search string
-        });
+        // Mengembalikan array produk yang namanya mengandung kata kunci pencarian
+        return array_filter($this->products, fn($product) => stripos($product['name'], $name) !== false);
     }
 }
 
-$petShop = new PetShop(); // Create a new PetShop instance
-$searchResults = null; // Initialize variable to hold search results
-$currentAction = 'display'; // Set default action to 'display'
+// Membuat instance dari kelas PetShop
+$petShop = new PetShop(); 
+// Variabel untuk menyimpan hasil pencarian
+$searchResults = null; 
+// Menentukan aksi yang sedang dilakukan berdasarkan session atau default 'display'
+$currentAction = $_SESSION['current_action'] ?? 'display';
 
-// Store the current action in session if it's submitted
-if (isset($_POST['action'])) {
-    $_SESSION['current_action'] = $_POST['action']; // Save the current action to session
-    $currentAction = $_POST['action']; // Set the current action
-} elseif (isset($_SESSION['current_action'])) {
-    $currentAction = $_SESSION['current_action']; // Get the current action from session
-}
-
-if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-    // Handle the GET request to reset search results
-    if (isset($_GET['reset']) && $_GET['reset'] == 'true') {
-        $searchResults = null; // Reset search results
-        $_SESSION['current_action'] = 'display'; // Set the action back to display
-        $currentAction = 'display'; // Set the current action to display
-        // Redirect back to remove the query parameter
-        header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
-        exit; // Exit to prevent further processing
-    }
-}
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    // Handle the POST request based on the action submitted
-    if (isset($_POST['action'])) {
-        switch ($_POST['action']) {
-            case 'add':
-                // Handle the 'add' action to add a new product
-                if (!empty($_FILES['photo']['name'])) {
-                    $targetDir = "uploads/"; // Set the directory to save uploaded photos
-                    $fileName = basename($_FILES['photo']['name']); // Get the file name of the uploaded photo
-                    $targetFile = $targetDir . $fileName; // Set the target file path
-                    move_uploaded_file($_FILES['photo']['tmp_name'], $targetFile); // Move the uploaded file to the target directory
-                    // Add the new product with the uploaded photo
-                    $petShop->addProduct($_POST['name'], $_POST['category'], $_POST['price'], $targetFile);
-                }
-                $searchResults = null; // Reset search results after adding a product
-                break;
-            case 'update':
-                // Handle the 'update' action to update an existing product
-                if (!empty($_FILES['photo']['name'])) {
-                    $targetDir = "uploads/"; // Set the directory to save uploaded photos
-                    $fileName = basename($_FILES['photo']['name']); // Get the file name of the uploaded photo
-                    $targetFile = $targetDir . $fileName; // Set the target file path
-                    move_uploaded_file($_FILES['photo']['tmp_name'], $targetFile); // Move the uploaded file to the target directory
-                    // Update the product with the new details
-                    $petShop->updateProduct($_POST['id'], $_POST['name'], $_POST['category'], $_POST['price'], $targetFile);
-                } else {
-                    // If no new photo is uploaded, update the product with the old photo
-                    $petShop->updateProduct($_POST['id'], $_POST['name'], $_POST['category'], $_POST['price'], $_POST['old_photo']);
-                }
-                $searchResults = null; // Reset search results after updating a product
-                break;
-            case 'delete':
-                // Handle the 'delete' action to delete a product
-                $petShop->deleteProduct($_POST['id']); // Delete the product by ID
-                $searchResults = null; // Reset search results after deleting a product
-                break;
-            case 'search':
-                // Handle the 'search' action to search for products by name
-                $searchResults = $petShop->searchProductByName($_POST['search_name']); // Get the search results based on the name
-                break;
-        }
+// Memeriksa apakah request method adalah POST dan action telah ditentukan
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['action'])) {
+    // Menyimpan aksi saat ini ke dalam session
+    $_SESSION['current_action'] = $_POST['action'];
+    // Melakukan switch case berdasarkan aksi yang dipilih
+    switch ($_POST['action']) {
+        case 'add':
+            // Memeriksa apakah file foto telah diunggah
+            if (!empty($_FILES['photo']['name'])) {
+                // Menentukan lokasi file yang diunggah
+                $targetFile = "uploads/" . basename($_FILES['photo']['name']);
+                // Memindahkan file yang diunggah ke lokasi yang ditentukan
+                move_uploaded_file($_FILES['photo']['tmp_name'], $targetFile);
+                // Menambahkan produk baru dengan data yang diberikan
+                $petShop->addProduct($_POST['name'], $_POST['category'], $_POST['price'], $targetFile);
+            }
+            break;
+        case 'update':
+            // Menentukan foto baru atau menggunakan foto lama jika tidak ada foto baru yang diunggah
+            $photo = !empty($_FILES['photo']['name']) ? "uploads/" . basename($_FILES['photo']['name']) : $_POST['old_photo'];
+            // Memindahkan file foto baru jika ada
+            if (!empty($_FILES['photo']['name'])) move_uploaded_file($_FILES['photo']['tmp_name'], $photo);
+            // Memperbarui produk dengan data yang diberikan
+            $petShop->updateProduct($_POST['id'], $_POST['name'], $_POST['category'], $_POST['price'], $photo);
+            break;
+        case 'delete':
+            // Menghapus produk berdasarkan ID
+            $petShop->deleteProduct($_POST['id']);
+            break;
+        case 'search':
+            // Mencari produk berdasarkan nama dan menyimpan hasilnya
+            $searchResults = $petShop->searchProductByName($_POST['search_name']);
+            break;
     }
 }
 ?>
-
 
 <!DOCTYPE html>
 <html>
@@ -372,7 +314,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </thead>
             <tbody>
                 <?php 
-                $productsToDisplay = $searchResults ?? $petShop->displayProducts(); // Get products to display, either from search or all products
+                $productsToDisplay = $searchResults ?? $petShop->getProducts(); 
                 foreach ($productsToDisplay as $product): ?> <!-- Loop through each product -->
                     <tr>
                         <td><?= htmlspecialchars($product['id']) ?></td> <!-- Display product ID -->
@@ -412,21 +354,29 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     <!-- JavaScript Section -->
     <script>
-        function toggleForm(formId) { // Function to toggle visibility of add form
-            var form = document.getElementById(formId);
-            form.style.display = form.style.display === 'none' ? 'block' : 'none'; // Toggle between 'none' and 'block'
-        }
+    // Fungsi untuk menampilkan atau menyembunyikan form berdasarkan ID form
+    function toggleForm(formId) { 
+        // Mengambil elemen form berdasarkan ID
+        var form = document.getElementById(formId);
+        // Mengubah tampilan form: jika tersembunyi (none), tampilkan (block), dan sebaliknya
+        form.style.display = form.style.display === 'none' ? 'block' : 'none'; 
+    }
 
-        function toggleUpdateForm(id, name, category, price, photo) { // Function to populate update form and display it
-            var updateForm = document.getElementById('update-form');
-           
-                document.getElementById('update-id').value = id; // Set product ID in update form
-                document.getElementById('update-name').value = name; // Set product name in update form
-                document.getElementById('update-category').value = category; // Set product category in update form
-                document.getElementById('update-price').value = price; // Set product price in update form
-                document.getElementById('update-old-photo').value = photo; // Set product photo in update form
-                updateForm.style.display = 'block'; // Display update form
-        }
-    </script>
+    // Fungsi untuk menampilkan form update dan mengisi nilai-nilai yang sesuai
+    function toggleUpdateForm(id, name, category, price, photo) { 
+        // Mengambil elemen form update berdasarkan ID
+        var updateForm = document.getElementById('update-form');
+        
+        // Mengisi nilai-nilai input di form update dengan data yang diberikan
+        document.getElementById('update-id').value = id; // Mengisi ID produk
+        document.getElementById('update-name').value = name; // Mengisi nama produk
+        document.getElementById('update-category').value = category; // Mengisi kategori produk
+        document.getElementById('update-price').value = price; // Mengisi harga produk
+        document.getElementById('update-old-photo').value = photo; // Mengisi foto lama produk
+        
+        // Menampilkan form update
+        updateForm.style.display = 'block'; 
+    }
+</script>
 </body>
 </html>
