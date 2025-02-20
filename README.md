@@ -38,9 +38,7 @@ Program terdiri dari satu class utama, yaitu PetShop, yang bertanggung jawab ata
    - Jika tidak ditemukan, sistem menampilkan pesan error.  
 
 7. **Keluar dari program (Pilihan 6)**  
-   - Program akan berhenti setelah menampilkan pesan "Terima kasih!".  
-
-Berikut adalah alur program dalam bentuk yang lebih terstruktur untuk PHP:  
+   - Program akan berhenti setelah menampilkan pesan "Terima kasih!".   
 
 ---
 
