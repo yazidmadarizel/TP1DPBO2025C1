@@ -4,12 +4,17 @@
  soal TP 1 dalam mata kuliah Desain dan Pemrograman Berorientasi Objek
 untuk keberkahanNya maka saya tidak melakukan kecurangan seperti yang telah dispesifikasikan. Aamiin.*/
 
-## **Desain Program**  
+## **Desain Program C++, Java, & Python**  
 Program terdiri dari satu class utama, yaitu PetShop, yang bertanggung jawab atas manajemen data produk di pet shop. PetShop memiliki atribut untuk menyimpan ID unik produk, nama, kategori, harga, serta foto produk, dengan _next_id sebagai penanda ID berikutnya. Metode dalam class ini mencakup add_product() untuk menambahkan produk baru, update_product() untuk memperbarui data produk berdasarkan ID, delete_product() untuk menghapus produk, display_products() untuk menampilkan daftar produk dalam bentuk tabel, serta search_product_by_name() untuk mencari produk berdasarkan nama.  
 
 ---
 
-## **Alur Program**  
+## **Desain Program PHP**  
+Program ini dirancang untuk mengelola data produk dalam sebuah pet shop menggunakan PHP dengan sesi (session) untuk menyimpan informasi produk secara sementara. Program terdiri dari satu kelas utama, yaitu PetShop, yang bertanggung jawab atas penambahan, pembaruan, penghapusan, pencarian, serta penampilan daftar produk. Setiap produk memiliki atribut seperti ID unik, nama, kategori, harga, dan foto produk. Program ini menggunakan metode addProduct() untuk menambahkan produk baru dengan ID yang dihasilkan secara otomatis, updateProduct() untuk memperbarui informasi produk berdasarkan ID yang diberikan, deleteProduct() untuk menghapus produk dari daftar, serta searchProductByName() untuk mencari produk berdasarkan nama. Data produk disimpan dalam variabel sesi agar tetap tersedia selama pengguna masih mengakses aplikasi. Antarmuka pengguna berbasis HTML dan PHP memungkinkan pengguna untuk menampilkan daftar produk dalam bentuk tabel, menambah produk baru dengan validasi harga agar tidak negatif, memperbarui informasi produk yang sudah ada, menghapus produk berdasarkan ID, serta mencari produk dengan pencocokan sebagian nama. Foto produk yang diunggah disimpan dalam direktori khusus, dan aplikasi menangani unggahan file dengan memeriksa apakah foto tersedia sebelum menyimpannya. Program juga menyediakan sistem navigasi sederhana dengan tombol dan formulir yang memungkinkan pengguna berinteraksi dengan sistem secara mudah.
+
+---
+
+## **Alur Program C++, Java, & Python**  
 1. **Menampilkan menu utama**  
    - User disajikan dengan menu pilihan untuk mengelola produk dalam pet shop.  
 
